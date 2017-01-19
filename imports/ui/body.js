@@ -1,6 +1,7 @@
 /**
  * Created by alan on 1/10/17.
  */
+import { Meteor } from 'meteor/meteor';
 import { Template } from 'meteor/templating';
 import { ReactiveDict } from 'meteor/reactive-dict'
 
@@ -24,6 +25,9 @@ Template.body.helpers({
         // Show newest tasks at the top
         return Tasks.find({}, { sort: { createdAt: -1 } });
     },
+    incompleteCount() {
+        return Tasks.find({ checked: { $ne: true } }).count();
+    },
 });
 
 
@@ -40,6 +44,8 @@ Template.body.events({
         Tasks.insert({
             text,
             createdAt: new Date(), // current time
+            ownder: Meteor.userID(),
+            username: Meteor.user().username,
         });
 
 
